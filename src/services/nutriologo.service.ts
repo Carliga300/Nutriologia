@@ -96,6 +96,11 @@ export class NutriologoService {
     return this.http.post<any>(`${environment.url_api}/nutriologo/`,data, httpOptions);
   }
 
+  // Token Access - Iniciar Sesión
+  public iniciarSesion(data: any): Observable<any> {
+    return this.http.post<any>(`${environment.url_api}/auth/token/`, data, httpOptions);
+  }
+
   public obtenerListaNutriologos (): Observable <any>{
     var token = this.facadeService.getSessionToken();
     var headers = new HttpHeaders({ 'Content-Type': 'application/json' , 'Authorization': 'Bearer '+token});
