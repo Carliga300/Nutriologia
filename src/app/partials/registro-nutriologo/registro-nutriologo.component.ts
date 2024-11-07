@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FacadeService } from 'src/services/facade.service';
 import { Location } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
+import { FormBuilder, FormGroup,Validators } from '@angular/forms';
 import { EditarUserModalComponent } from 'src/app/modals/editar-user-modal/editar-user-modal.component';
 
 //Para poder usar jquery definir esto
@@ -17,6 +18,7 @@ declare var $:any;
 export class RegistroNutriologoComponent implements OnInit{
   @Input() rol: string = "";
   @Input() datos_user: any = {};
+  userForm: FormGroup;
 
  //Para contraseñas
   public hide_1: boolean = false;
@@ -36,9 +38,22 @@ export class RegistroNutriologoComponent implements OnInit{
     public activatedRoute: ActivatedRoute,
     private nustriologoService: NutriologoService,
     private facadeService: FacadeService,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private fb: FormBuilder,
 
-  ){}
+  ){
+     // Inicializar el formulario con valores predeterminados
+     this.userForm = this.fb.group({
+      username: [''],
+      password: ['pass', Validators.required],
+      first_name: ['first-name-8', Validators.required],
+      last_name: ['last-name-8', Validators.required],
+      email: ['angular-user-8@mail.com', [Validators.required, Validators.email]],
+      role: ['nutriologo', Validators.required],
+      cedula: ['1274550', Validators.required],
+      telefono: ['22239545488', [Validators.required, Validators.pattern(/^\d+$/)]],
+    });
+  }
 
   ngOnInit(): void {
     //El primer if valida si existe un parámetro en la URL
@@ -57,6 +72,29 @@ export class RegistroNutriologoComponent implements OnInit{
     //Imprimir datos en consola
     console.log("Nutriologo: ", this.nutriologo);
 
+  }
+
+  onSubmit(): void {
+    if (this.userForm.valid) {
+
+      this.nutriologo = this.userForm.value;
+      this.nutriologo.username = this.nutriologo.email;
+
+      this.nustriologoService.registrarNutriologo(this.userForm.value).subscribe({
+        next: (response) => {
+          alert('Usuario Registrado Correctamente');
+          console.log(response);
+          this.router.navigate(['/auth/login']);
+        },
+        error: (response) => {
+          alert('¡Error!: No se Pudo Registrar Usuario');
+          console.log(response.error);
+        },
+      });
+
+    } else {
+      alert('Form Invalid');
+    }
   }
 
   public regresar(){

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { NutriologoService } from 'src/services/nutriologo.service';
 import { Router } from '@angular/router';
 import { FacadeService } from 'src/services/facade.service';
 declare var $: any;
@@ -14,28 +15,40 @@ export class LoginScreenComponent implements OnInit {
   public type: string = 'password';
   public errors: any = {};
 
-  constructor(private router: Router, private facadeService: FacadeService) {}
+  constructor(
+      private router: Router,
+      private facadeService: FacadeService,
+      private nustriologoService: NutriologoService,
+  ) {}
 
   ngOnInit(): void {}
 
+  userToken = {
+    username: '',
+    password: '',
+  };
+
+
   public login() {
-    this.errors = [];
+    console.log(this.userToken);
+    console.log(this.username);
+    console.log(this.password);
 
-    this.errors = this.facadeService.validarLogin(this.username, this.password);
-    if (!$.isEmptyObject(this.errors)){
-      return false;
-    }
+    this.userToken.username = this.username;
+    this.userToken.password = this.password;
 
-    // Si pasa la validación, ir a la página de home
-    this.facadeService.login(this.username, this.password).subscribe(
-      (response) => {
-        this.facadeService.saveUserData(response);
-        this.router.navigate(["home"]);
+    console.log(this.userToken);
+    this.nustriologoService.iniciarSesion(this.userToken).subscribe({
+      next: (response) => {
+        alert('Sesión Iniciada Correctamente');
+        console.log(response);
+        this.router.navigate(['/nutriologo-screen']);
       },
-      (error) => {
-        alert("No se pudo iniciar sesión");
-      }
-    );
+      error: (response) => {
+        alert('¡Error!: No se Pudo Iniciar Sesión');
+        console.log(response.error);
+      },
+    });
   }
 
   public registrar() {
