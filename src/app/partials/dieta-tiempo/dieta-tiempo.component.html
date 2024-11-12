@@ -19,6 +19,25 @@
       </mat-radio-group>
     </div>
   </div>
+  <div class="row mt-3">
+ <!-- Contenedores para las comidas: Desayuno, Comida, Cena -->
+<div class="comidas-container">
+  <!-- Desayuno -->
+  <div *ngIf="comidas[0]" class="comida-card" [attr.value]="'Desayuno'" (click)="navegar('Desayuno')">
+    <h3>Desayuno</h3>
+  </div>
+
+   <!-- Comida -->
+  <div *ngIf="comidas[1]" class="comida-card" [attr.value]="'Comida'" (click)="navegar('Comida')">
+    <h3>Comida</h3>
+  </div>
+
+   <!--Cena -->
+  <div *ngIf="comidas[2]" class="comida-card" [attr.value]="'Cena'" (click)="navegar('Cena')">
+    <h3>Cena</h3>
+  </div>
+  </div>
+</div>
 
 </div>
 </div>

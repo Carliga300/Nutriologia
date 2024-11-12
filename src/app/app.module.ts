@@ -33,6 +33,10 @@ import { EliminarUserModalComponent } from './modals/eliminar-user-modal/elimina
 import { EditarUserModalComponent } from './modals/editar-user-modal/editar-user-modal.component';
 import { DietaTiempoComponent } from './partials/dieta-tiempo/dieta-tiempo.component';
 import { DietaPorcionComponent } from './partials/dieta-porcion/dieta-porcion.component';
+import { ProteinasComponent } from './partials/Alimentos/proteinas/proteinas.component';
+import { VerdurasComponent } from './partials/Alimentos/verduras/verduras.component';
+import { FrutasComponent } from './partials/Alimentos/frutas/frutas.component';
+import { CarbohidratosComponent } from './partials/Alimentos/carbohidratos/carbohidratos.component';
 
 @NgModule({
   declarations: [
@@ -46,7 +50,11 @@ import { DietaPorcionComponent } from './partials/dieta-porcion/dieta-porcion.co
     EliminarUserModalComponent,
     EditarUserModalComponent,
     DietaTiempoComponent,
-    DietaPorcionComponent
+    DietaPorcionComponent,
+    ProteinasComponent,
+    VerdurasComponent,
+    FrutasComponent,
+    CarbohidratosComponent
   ],
   imports: [
     BrowserModule,

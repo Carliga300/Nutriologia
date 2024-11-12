@@ -1,0 +1,22 @@
+<div class="wrapper">
+  <div>
+    <label class="title-user" >Proteinas</label>
+  </div>
+  <div class="button-container">
+    <button type="button" class="btn btn-primary" type="submit" (click)="regresar()">Regresar</button>
+    <button type="button" class="btn btn-primary" type="submit" (click)="siguiente()">Siguiente </button>
+  </div>
+  <div class="container-inputs">
+    <div class="image-container">
+      <div
+        *ngFor="let alimento of alimentos"
+        class="image-item"
+        [ngClass]="{'selected': isSelected(alimento.nombre)}"
+        (click)="toggleSeleccion(alimento.nombre)">
+        <img [src]="alimento.src" [alt]="alimento.nombre">
+        <span class="image-text">{{ alimento.nombre }}</span>
+      </div>
+    </div>
+
+    </div>
+  </div>
