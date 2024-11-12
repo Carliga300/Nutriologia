@@ -12,7 +12,7 @@ import * as $ from 'jquery';
 @Component({
   selector: 'app-dieta-tiempo',
   templateUrl: './dieta-tiempo.component.html',
-  styleUrls: ['./dieta-tiempo.component.scss']
+  styleUrls: ['./dieta-tiempo.component.scss'],
 })
 export class DietaTiempoComponent implements OnInit{
 
@@ -46,6 +46,13 @@ export class DietaTiempoComponent implements OnInit{
     {value: '7', nombre: 'Domingo', comidas: this.comidas},
   ];
 
+  contadores = [
+    [0], // Proteínas
+    [0], // Frutas
+    [0], // Verduras
+    [0]  // Carbohidratos-legumbres
+  ];
+
   constructor(
     private location : Location,
     private router: Router,
@@ -53,8 +60,13 @@ export class DietaTiempoComponent implements OnInit{
     private tiempoService: TiempoService,
     private facadeService: FacadeService,
     public dialog: MatDialog
+<<<<<<< HEAD
 
   ){}
+=======
+  )
+  {}
+>>>>>>> d9be38b2b636738bbdd32a8ce1fac9bf2c2a48c9
 
   ngOnInit(): void {
     /// Suscribirse a los cambios en los alimentos seleccionados
@@ -68,12 +80,22 @@ export class DietaTiempoComponent implements OnInit{
     this.location.back();
   }
 
+<<<<<<< HEAD
     // Método para agregar un alimento a una comida específica
   public agregarAlimento(comidaNombre: string, alimento: any) {
     const comida = this.comidas.find(c => c.nombre === comidaNombre);
     if (comida && !comida.alimentos.includes(alimento)) {
       comida.alimentos.push(alimento);
       console.log(`${alimento.nombre} agregado a ${comidaNombre}`);
+=======
+  public registar(){
+    //Validar
+    this.errors = [];
+
+    this.errors = this.tiempoService.validarTiempo(this.tiempo, this.editar)
+    if(!$.isEmptyObject(this.errors)){
+      return false;
+>>>>>>> d9be38b2b636738bbdd32a8ce1fac9bf2c2a48c9
     }
   }
 
@@ -88,8 +110,19 @@ export class DietaTiempoComponent implements OnInit{
     }
   }
 
+<<<<<<< HEAD
   public navegar(tipo: string) {
     this.router.navigate(['/proteina']);  // Navega a '/comida/tipo'
+=======
+  incrementar(sectionIndex: number, contadorIndex: number) {
+    this.contadores[sectionIndex][contadorIndex]++;
+  }
+
+  decrementar(sectionIndex: number, contadorIndex: number) {
+    if (this.contadores[sectionIndex][contadorIndex] > 0) {
+      this.contadores[sectionIndex][contadorIndex]--;
+    }
+>>>>>>> d9be38b2b636738bbdd32a8ce1fac9bf2c2a48c9
   }
 }
 

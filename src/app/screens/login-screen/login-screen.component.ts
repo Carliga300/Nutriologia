@@ -37,8 +37,12 @@ export class LoginScreenComponent implements OnInit {
     this.userToken.username = this.username;
     this.userToken.password = this.password;
 
+<<<<<<< HEAD
     console.log(this.userToken);
     this.nustriologoService.iniciarSesion(this.userToken).subscribe({
+=======
+    this.facadeService.login(this.username, this.password).subscribe({
+>>>>>>> d9be38b2b636738bbdd32a8ce1fac9bf2c2a48c9
       next: (response) => {
         alert('Sesión Iniciada Correctamente');
         console.log(response);
