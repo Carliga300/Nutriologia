@@ -5,6 +5,8 @@ import { ErrorService } from './tools/error.service';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { FacadeService } from './facade.service';
+import { BehaviorSubject } from 'rxjs';
+
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -22,63 +24,11 @@ export class PorcionService {
     private facadeService: FacadeService
   ) { }
 
-  public esquemaPorcion(){
-    return {
-      'rol':'',
-      'edad': '',
-      'peso': '',
+    private alimentosSeleccionadosSource = new BehaviorSubject<string[]>([]);
+    alimentosSeleccionados$ = this.alimentosSeleccionadosSource.asObservable();
+
+    // Método para actualizar el arreglo
+    actualizarAlimentosSeleccionados(alimentos: string[]) {
+      this.alimentosSeleccionadosSource.next(alimentos);
     }
-  }
-
-
-  //Validación para el formulario
-  public validarPorcion(data: any, editar: boolean){
-    console.log("Validando... ", data);
-    let error: any = [];
-
-    if(!this.validatorService.required(data["edad"])){
-      error["edad"] = this.errorService.required;
-    }else if(!this.validatorService.numeric(data["edad"])){
-      alert("El formato es solo números");
-      error["edad"] = this.errorService.numeric;
-    }else if(!this.validatorService.min(data["edad"], 2)){
-      error["edad"] = this.errorService.min(2);
-      alert("La longitud de caracteres de la edad es menor, deben ser 2");
-    }else if(!this.validatorService.max(data["edad"], 2)){
-      error["edad"] = this.errorService.max(2);
-      alert("La longitud de caracteres de la edad es mayor, deben ser 2");
-
-
-    }
-
-    if(!this.validatorService.required(data["peso"])){
-      error["peso"] = this.errorService.required;
-    }else if(!this.validatorService.numeric(data["peso"])){
-      alert("El formato es solo números");
-      error["peso"] = this.errorService.numeric;
-    }else if(!this.validatorService.min(data["peso"], 2)){
-      error["peso"] = this.errorService.min(2);
-      alert("La longitud de caracteres del peso es menor, deben ser 2");
-    }else if(!this.validatorService.max(data["peso"], 2)){
-      error["peso"] = this.errorService.max(2);
-      alert("La longitud de caracteres del peso es mayor, deben ser 2");
-
-    //Return arreglo
-    return error;
-  }
-}
-
-  //Aquí van los servicios HTTP
-  //Servicio para registrar un nuevo usuario
-  public registrarPorcion (data: any): Observable <any>{
-    return this.http.post<any>(`${environment.url_api}/porcion/`,data, httpOptions);
-  }
-
-  //Servicio para actualizar un usuario
-  public editarPorcion (data: any): Observable <any>{
-    var token = this.facadeService.getSessionToken();
-    var headers = new HttpHeaders({ 'Content-Type': 'application/json' , 'Authorization': 'Bearer '+token});
-    return this.http.put<any>(`${environment.url_api}/porcion-edit/`, data, {headers:headers});
-  }
-
 }

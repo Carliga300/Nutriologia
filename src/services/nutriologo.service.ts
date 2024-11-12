@@ -22,6 +22,19 @@ export class NutriologoService {
     private facadeService: FacadeService
   ) { }
 
+  public createPost(data: any){
+    return {
+      'first_name': data.first_name,
+      'last_name': data.last_name,
+      'cedula': data.cedula,
+      'telefono': data.telefono,
+      'email': data.email,
+      'password': data.password,
+      'username': data.email,
+      'role': data.rol
+    }
+  }
+
   public esquemaNutriologo(){
     return {
       'rol':'',
@@ -35,7 +48,7 @@ export class NutriologoService {
     }
 
   }
-//Validación para el formulario
+///Validación para el formulario
   public validarNutriologo(data: any, editar: boolean){
     console.log("Validando nutriologo... ", data);
     let error: any = [];
@@ -93,7 +106,12 @@ export class NutriologoService {
   //Aquí van los servicios HTTP
   //Servicio para registrar un nuevo usuario
   public registrarNutriologo (data: any): Observable <any>{
-    return this.http.post<any>(`${environment.url_api}/nutriologo/`,data, httpOptions);
+    return this.http.post<any>(`${environment.url_api}/api/v1/nutriologos/crear/`,data, httpOptions);
+  }
+
+  // Token Access - Iniciar Sesión
+  public iniciarSesion(data: any): Observable<any> {
+    return this.http.post<any>(`${environment.url_api}/auth/token/`, data, httpOptions);
   }
 
   public obtenerListaNutriologos (): Observable <any>{
