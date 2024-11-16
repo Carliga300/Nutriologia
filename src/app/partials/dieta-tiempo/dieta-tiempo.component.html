@@ -2,23 +2,72 @@
 <div class="wrapper">
   <div class="section-registro">
 
-  <div class="form-group col-12">
-    <label class="title-user" >Dieta por tiempos</label>
-  </div>
-
-  <div class="row mt-3">
-    <div class="form-group col-12 d-flex justify-content-center mat1">
-      <mat-radio-group (change)="radioChange($event)" [disabled]="editar">
-        <mat-radio-button value="Lunes">Lunes</mat-radio-button>
-        <mat-radio-button value="Martes">Martes</mat-radio-button>
-        <mat-radio-button value="Miercoles">Miercoles</mat-radio-button>
-        <mat-radio-button value="Jueves">Jueves</mat-radio-button>
-        <mat-radio-button value="Viernes">Viernes</mat-radio-button>
-        <mat-radio-button value="Sabado">Sabado</mat-radio-button>
-        <mat-radio-button value="Domingo">Domingo</mat-radio-button>
-      </mat-radio-group>
+    <div class="form-group col-12">
+      <label class="title-user">Dieta por tiempos</label>
     </div>
-  </div>
 
+    <div class="row mt-3">
+      <div class="form-group col-12 d-flex justify-content-center mat1">
+        <mat-radio-group (change)="radioChange($event)" [disabled]="editar">
+          <mat-radio-button value="Lunes">Lunes</mat-radio-button>
+          <mat-radio-button value="Martes">Martes</mat-radio-button>
+          <mat-radio-button value="Miercoles">Miércoles</mat-radio-button>
+          <mat-radio-button value="Jueves">Jueves</mat-radio-button>
+          <mat-radio-button value="Viernes">Viernes</mat-radio-button>
+          <mat-radio-button value="Sabado">Sábado</mat-radio-button>
+          <mat-radio-button value="Domingo">Domingo</mat-radio-button>
+        </mat-radio-group>
+      </div>
+    </div>
+
+    <div class="row mt-3">
+      <div class="comidas-container">
+
+        <!-- Desayuno -->
+        <div *ngIf="comidas[0]" class="comida-card" [attr.value]="'Desayuno'" (click)="navegar('Desayuno')">
+          <h3>Desayuno</h3>
+          <div *ngIf="comidas[0].alimentos.length > 0" class="alimento-list">
+            <div *ngFor="let alimento of comidas[0].alimentos" class="alimento-item">
+              <img *ngIf="alimento.imagen" [src]="alimento.imagen" alt="{{alimento.nombre}}" class="alimento-img">
+              <span>{{ alimento.nombre || alimento }}</span>
+            </div>
+          </div>
+          <div *ngIf="comidas[0].alimentos.length === 0">
+            <span>No se han seleccionado alimentos.</span>
+          </div>
+        </div>
+
+        <!-- Comida -->
+        <div *ngIf="comidas[1]" class="comida-card" [attr.value]="'Comida'" (click)="navegar('Comida')">
+          <h3>Comida</h3>
+          <div *ngIf="comidas[1].alimentos.length > 0" class="alimento-list">
+            <div *ngFor="let alimento of comidas[1].alimentos" class="alimento-item">
+              <img *ngIf="alimento.imagen" [src]="alimento.imagen" alt="{{alimento.nombre}}" class="alimento-img">
+              <span>{{ alimento.nombre || alimento }}</span>
+            </div>
+          </div>
+          <div *ngIf="comidas[1].alimentos.length === 0">
+            <span>No se han seleccionado alimentos.</span>
+          </div>
+        </div>
+
+        <!-- Cena -->
+        <div *ngIf="comidas[2]" class="comida-card" [attr.value]="'Cena'" (click)="navegar('Cena')">
+          <h3>Cena</h3>
+          <div *ngIf="comidas[2].alimentos.length > 0" class="alimento-list">
+            <div *ngFor="let alimento of comidas[2].alimentos" class="alimento-item">
+              <img *ngIf="alimento.imagen" [src]="alimento.imagen" alt="{{alimento.nombre}}" class="alimento-img">
+              <span>{{ alimento.nombre || alimento }}</span>
+            </div>
+          </div>
+          <div *ngIf="comidas[2].alimentos.length === 0">
+            <span>No se han seleccionado alimentos.</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
 </div>
-</div>
+

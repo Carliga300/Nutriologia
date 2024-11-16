@@ -26,35 +26,14 @@ export class DietaTiempoComponent implements OnInit{
   public errors:any={};
   public editar:boolean = false;
   public idUser: Number = 0;
-  public alimentos_json: any [] = [];
+  // Arreglo de alimentos seleccionados
+  public alimentosSeleccionados: any[] = [];
 
-  public alimentos:any[]= [
-    {value: '1', nombre: 'Carne'},
-    {value: '2', nombre: 'Pollo'},
-    {value: '3', nombre: 'Pescado'},
-    {value: '4', nombre: 'Huevo'},
-    {value: '5', nombre: 'Lentejas'},
-    {value: '6', nombre: 'Manzana'},
-    {value: '7', nombre: 'Brocoli'},
-    {value: '8', nombre: 'Zanahoria'},
-    {value: '9', nombre: 'Espinaca'},
-    {value: '10', nombre: 'Naranja'},
-    {value: '11', nombre: 'Arroz'},
-    {value: '12', nombre: 'Maiz'},
-    {value: '13', nombre: 'Anena'},
-    {value: '14', nombre: 'Papa'},
-    {value: '15', nombre: 'Tortilla'},
-    {value: '16', nombre: 'Aguacate'},
-    {value: '17', nombre: 'Nuez'},
-    {value: '18', nombre: 'Semilla'},
-    {value: '19', nombre: 'Aceite_oliva'},
-    {value: '20', nombre: 'Mantequilla_mani'},
-  ];
 
   public comidas:any[]= [
-    {value: '1', nombre: 'Desayuno', alimentos: this.alimentos},
-    {value: '2', nombre: 'Comida', alimentos: this.alimentos},
-    {value: '3', nombre: 'Cena', alimentos: this.alimentos},
+    {value: '1', nombre: 'Desayuno',  alimentos: []},
+    {value: '2', nombre: 'Comida',  alimentos: []},
+    {value: '3', nombre: 'Cena',  alimentos: []},
   ];
 
   public dias:any[]= [
@@ -68,6 +47,7 @@ export class DietaTiempoComponent implements OnInit{
   ];
 
   constructor(
+
     private location : Location,
     private router: Router,
     public activatedRoute: ActivatedRoute,
@@ -75,25 +55,24 @@ export class DietaTiempoComponent implements OnInit{
     private facadeService: FacadeService,
     public dialog: MatDialog
 
-
   ){}
 
   ngOnInit(): void {
-    //El primer if valida si existe un parámetro en la URL
-    if(this.activatedRoute.snapshot.params['id'] != undefined){
-      this.editar = true;
-      //Asignamos a nuestra variable global el valor del ID que viene por la URL
-      this.idUser = this.activatedRoute.snapshot.params['id'];
-      console.log("ID User: ", this.idUser);
-      //Al iniciar la vista asignamos los datos del user
-      this.tiempo = this.datos_user;
-    }else{
-      this.tiempo = this.tiempoService.esquemaTiempo();
-      this.tiempo.rol = this.rol;
-      this.token = this.facadeService.getSessionToken();
+    // Suscribirse al servicio para recibir los alimentos seleccionados
+    this.tiempoService.alimentosSeleccionados$.subscribe(alimentos => {
+      console.log('Alimentos seleccionados:', alimentos); // Verifica los alimentos
+//Carlos: Si funciona la parte de arriba
+
+  //Asigna los alimentos al tipo de comida actualmente seleccionado
+  if (this.tipo_dia) {
+    const comida = this.comidas.find(c => c.nombre === this.tipo_dia);
+    if (comida) {
+      comida.alimentos = [...alimentos]; // Actualiza los alimentos para la comida seleccionada
     }
-    //Imprimir datos en consola
-    console.log("Tiempo: ", this.tiempo);
+  }
+  console.log('Comidas seleccionados:', this.comidas); // Verifica los alimentos
+  console.log('Tiempo:', this.tipo_dia);
+});
 
   }
 
@@ -101,67 +80,13 @@ export class DietaTiempoComponent implements OnInit{
     this.location.back();
   }
 
-  public Registrar(){
-    //Validar
-    this.errors = [];
-
-    this.errors = this.tiempoService.validarTiempo(this.tiempo, this.editar)
-    if(!$.isEmptyObject(this.errors)){
-      return false;
+    // Método para agregar un alimento a una comida específica
+  public agregarAlimento(comidaNombre: string, alimento: any) {
+    const comida = this.comidas.find(c => c.nombre === comidaNombre);
+    if (comida && !comida.alimentos.includes(alimento)) {
+      comida.alimentos.push(alimento);
+      console.log(`${alimento.nombre} agregado a ${comidaNombre}`);
     }
-    // Validamos que las contraseñas coincidan
-    //Validar la contraseña
-    if(this.tiempo.password == this.tiempo.confirmar_password){
-      //Aquí si todo es correcto vamos a registrar - aquí se manda a consumir el servicio
-      this.tiempoService.registrarTiempo(this.tiempo).subscribe(
-        (response)=>{
-          alert("Usuario registrado correctamente");
-          console.log("Usuario registrado: ", response);
-          this.router.navigate(["home"]);
-        }, (error)=>{
-          alert("No se pudo registrar usuario");
-        }
-      );
-    }else{
-      alert("Las contraseñas no coinciden");
-      this.tiempo.password="";
-      this.tiempo.confirmar_password="";
-    }
-  }
-
-  public actualizar(){
-    //Validación
-    this.errors = [];
-
-    this.errors = this.tiempoService.validarTiempo(this.tiempo, this.editar)
-    if(!$.isEmptyObject(this.errors)){
-      return false;
-    }
-
-    const dialogRef = this.dialog.open(EditarUserModalComponent,{
-      data: {rol: 'nutriologo'}, //Se pasan valores a través del componente
-      height: '288px',
-      width: '328px',
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      if(result.isEdit){
-        this.tiempoService.editarTiempo(this.tiempo).subscribe(
-          (response)=>{
-            alert("La dieta se edito correctamente");
-            console.log("Dieta modificada: ", response);
-            //Si se editó, entonces mandar al home
-            this.router.navigate(["nutriologo-screen"]);
-          }, (error)=>{
-            alert("No se edito la");
-            console.log("Error: ", error);
-          }
-        );
-      }else{
-        console.log("No se editó al nutriologo");
-      }
-    });
-
   }
 
   public radioChange(event: MatRadioChange) {
@@ -174,6 +99,19 @@ export class DietaTiempoComponent implements OnInit{
       this.tipo_dia = "Miercoles"
     }
   }
+
+  public navegar(tipo: string) {
+    this.tipo_dia = tipo; // Actualiza el tipo de comida seleccionado
+    console.log(`Navegando a seleccionar alimentos para ${tipo}`);
+  this.tiempoService.setTipoDia(tipo); // Establece el tipo de comida en el servicio
+
+    this.router.navigate(['/proteinas']);  // Navega a '/comida/tipo'
+  }
+
+  guardarAlimentos(comida: string, alimentos: any[]) {
+    this.tiempoService.actualizarAlimentosPorComida(comida, alimentos);
+  }
 }
 
 
+//Camaaa

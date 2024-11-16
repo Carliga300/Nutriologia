@@ -3,6 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'; // Requerido por Angular Material
+import { NgxMaskDirective, provideNgxMask } from 'ngx-mask'; // Agredado por david para la mask del telefono 10 digitos
 
 //Este import es para los servicios HTTP
 import { HttpClientModule } from '@angular/common/http';
@@ -33,6 +34,10 @@ import { EliminarUserModalComponent } from './modals/eliminar-user-modal/elimina
 import { EditarUserModalComponent } from './modals/editar-user-modal/editar-user-modal.component';
 import { DietaTiempoComponent } from './partials/dieta-tiempo/dieta-tiempo.component';
 import { DietaPorcionComponent } from './partials/dieta-porcion/dieta-porcion.component';
+import { ProteinasComponent } from './partials/Alimentos/proteinas/proteinas.component';
+import { VerdurasComponent } from './partials/Alimentos/verduras/verduras.component';
+import { FrutasComponent } from './partials/Alimentos/frutas/frutas.component';
+import { CarbohidratosComponent } from './partials/Alimentos/carbohidratos/carbohidratos.component';
 
 @NgModule({
   declarations: [
@@ -46,7 +51,11 @@ import { DietaPorcionComponent } from './partials/dieta-porcion/dieta-porcion.co
     EliminarUserModalComponent,
     EditarUserModalComponent,
     DietaTiempoComponent,
-    DietaPorcionComponent
+    DietaPorcionComponent,
+    ProteinasComponent,
+    VerdurasComponent,
+    FrutasComponent,
+    CarbohidratosComponent
   ],
   imports: [
     BrowserModule,
@@ -66,9 +75,12 @@ import { DietaPorcionComponent } from './partials/dieta-porcion/dieta-porcion.co
     MatDatepickerModule,
     MatNativeDateModule,
     MatTableModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    NgxMaskDirective,
   ],
-  providers: [],
+  providers: [
+     provideNgxMask() // Agredado por david para la mask del telefono 10 digitos
+     ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { NutriologoService } from 'src/services/nutriologo.service';
 import { Router } from '@angular/router';
 import { FacadeService } from 'src/services/facade.service';
 declare var $: any;
@@ -14,42 +13,40 @@ export class LoginScreenComponent implements OnInit {
   public password: string = '';
   public type: string = 'password';
   public errors: any = {};
-
-  constructor(
-      private router: Router,
-      private facadeService: FacadeService,
-      private nustriologoService: NutriologoService,
-  ) {}
-
-  ngOnInit(): void {}
-
-  userToken = {
-    username: '',
-    password: '',
-  };
+  public isLoading: boolean = false; // agregado por david para bandera login
 
 
+  constructor(private router: Router, private facadeService: FacadeService,) {}
+
+  //agregado por david para bandera login
   public login() {
-    console.log(this.userToken);
-    console.log(this.username);
-    console.log(this.password);
+    this.errors = [];
 
-    this.userToken.username = this.username;
-    this.userToken.password = this.password;
+    this.errors = this.facadeService.validarLogin(this.username, this.password);
+    if (!$.isEmptyObject(this.errors)){
+      return false;
+    }
 
-    console.log(this.userToken);
-    this.nustriologoService.iniciarSesion(this.userToken).subscribe({
+    this.isLoading = true; // Activar la bandera de carga
+
+    this.facadeService.login(this.username, this.password).subscribe({
       next: (response) => {
         alert('Sesión Iniciada Correctamente');
         console.log(response);
         this.router.navigate(['/nutriologo-screen']);
+        this.isLoading = false; // Desactivar la bandera de carga
       },
       error: (response) => {
         alert('¡Error!: No se Pudo Iniciar Sesión');
         console.log(response.error);
+        this.isLoading = false; // Desactivar la bandera de carga
       },
     });
   }
+
+
+  ngOnInit(): void {}
+
 
   public registrar() {
     this.router.navigate(['registro-usuarios/nutriologo/']);

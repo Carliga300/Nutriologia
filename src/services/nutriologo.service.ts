@@ -21,6 +21,18 @@ export class NutriologoService {
     private errorService: ErrorService,
     private facadeService: FacadeService
   ) { }
+  public createPost(data: any){
+    return {
+      'first_name': data.first_name,
+      'last_name': data.last_name,
+      'cedula': data.cedula,
+      'telefono': data.telefono,
+      'email': data.email,
+      'password': data.password,
+      'username': data.email,
+      'role': data.rol
+    }
+  }
 
   public esquemaNutriologo(){
     return {
