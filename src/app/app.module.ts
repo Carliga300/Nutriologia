@@ -32,7 +32,7 @@ import { RegistroPacienteComponent } from './partials/registro-paciente/registro
 import { NutriologoScreenComponent } from './screens/nutriologo-screen/nutriologo-screen.component';
 import { EliminarUserModalComponent } from './modals/eliminar-user-modal/eliminar-user-modal.component';
 import { EditarUserModalComponent } from './modals/editar-user-modal/editar-user-modal.component';
-import { DietaTiempoComponent } from './partials/dieta-tiempo/dieta-tiempo.component';
+import { DietaTiempoComponent } from './partials/dieta-tiempo/dieta-tiempo.component'; // revisar funciones
 import { DietaPorcionComponent } from './partials/dieta-porcion/dieta-porcion.component';
 import { ProteinasComponent } from './partials/Alimentos/proteinas/proteinas.component';
 import { VerdurasComponent } from './partials/Alimentos/verduras/verduras.component';

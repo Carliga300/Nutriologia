@@ -16,8 +16,11 @@ const httpOptions = {
   providedIn: 'root'
 })
 export class TiempoService {
-  private comidas: any[] = []; // Definimos la propiedad 'comidas' como un arreglo vacío
-
+  private comidas: any[] = [
+    {value: '1', nombre: 'Desayuno', alimentos: []},
+    {value: '2', nombre: 'Comida', alimentos: []},
+    {value: '3', nombre: 'Cena', alimentos: []},
+  ];
   private tipoDiaSubject = new BehaviorSubject<string>('');
   tipoDia$ = this.tipoDiaSubject.asObservable();
   private alimentosSeleccionados = new BehaviorSubject<any[]>([]); // Usamos BehaviorSubject para almacenar los alimentos seleccionados
@@ -30,7 +33,11 @@ export class TiempoService {
     private facadeService: FacadeService
   ) { }
 
-
+  // Método para obtener las comidas
+  obtenerComidas(): any[] {
+    return this.comidas;
+  }
+  
   // Método para actualizar el arreglo
   actualizarAlimentosSeleccionados(alimentos: any[]) {
     this.alimentosSeleccionados.next(alimentos);

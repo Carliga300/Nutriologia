@@ -28,13 +28,7 @@ export class DietaTiempoComponent implements OnInit{
   public idUser: Number = 0;
   // Arreglo de alimentos seleccionados
   public alimentosSeleccionados: any[] = [];
-
-
-  public comidas:any[]= [
-    {value: '1', nombre: 'Desayuno',  alimentos: []},
-    {value: '2', nombre: 'Comida',  alimentos: []},
-    {value: '3', nombre: 'Cena',  alimentos: []},
-  ];
+  public comidas: any[] = [];
 
   public dias:any[]= [
     {value: '1', nombre: 'Luneas', comidas: this.comidas},
@@ -58,6 +52,9 @@ export class DietaTiempoComponent implements OnInit{
   ){}
 
   ngOnInit(): void {
+    // Inicializar las comidas desde el servicio
+    this.comidas = this.tiempoService.obtenerComidas();
+    
     // Suscribirse al servicio para recibir los alimentos seleccionados
     this.tiempoService.alimentosSeleccionados$.subscribe(alimentos => {
       console.log('Alimentos seleccionados:', alimentos); // Verifica los alimentos
