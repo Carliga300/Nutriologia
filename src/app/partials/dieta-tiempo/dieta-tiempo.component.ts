@@ -54,7 +54,7 @@ export class DietaTiempoComponent implements OnInit{
   ngOnInit(): void {
     // Inicializar las comidas desde el servicio
     this.comidas = this.tiempoService.obtenerComidas();
-    
+
     // Suscribirse al servicio para recibir los alimentos seleccionados
     this.tiempoService.alimentosSeleccionados$.subscribe(alimentos => {
       console.log('Alimentos seleccionados:', alimentos); // Verifica los alimentos

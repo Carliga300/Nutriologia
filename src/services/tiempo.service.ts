@@ -37,7 +37,7 @@ export class TiempoService {
   obtenerComidas(): any[] {
     return this.comidas;
   }
-  
+
   // Método para actualizar el arreglo
   actualizarAlimentosSeleccionados(alimentos: any[]) {
     this.alimentosSeleccionados.next(alimentos);
