@@ -1,15 +1,15 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { TiempoService } from 'src/services/tiempo.service';
 import { Router } from '@angular/router';
-
 
 @Component({
   selector: 'app-verduras',
   templateUrl: './verduras.component.html',
   styleUrls: ['./verduras.component.scss']
 })
-export class VerdurasComponent {
-  public alimentos:any[]= [
+export class VerdurasComponent implements OnInit {
+
+  public alimentos: any[] = [
     { nombre: 'Zanahoria', src: '/assets/images/zanahoria.jpeg' },
     { nombre: 'Repollo', src: '/assets/images/repollo.jpeg' },
     { nombre: 'Aguacate', src: '/assets/images/Aguacate.jpeg' },
@@ -23,18 +23,18 @@ export class VerdurasComponent {
     { nombre: 'Pepino', src: '/assets/images/pepeino.jpeg' },
     { nombre: 'Papa', src: '/assets/images/papa.jpeg' },
   ];
-  alimentosSeleccionados: string[] = [];
+  alimentosSeleccionados: any[] = [];
+  public tipo_dia: string = '';
 
   constructor(
     private tiempoService: TiempoService,
     private router: Router
-  ){}
+  ) {}
 
   ngOnInit(): void {
-    // Carga los alimentos seleccionados del servicio al iniciar el componente
-    this.alimentosSeleccionados = this.tiempoService.obtenerAlimentosSeleccionados();
+    this.tipo_dia = this.tiempoService.getTipoDia(); // Obtiene el valor del servicio
+    this.alimentosSeleccionados = this.tiempoService.obtenerAlimentosSeleccionados(this.tipo_dia);
   }
-
 
   toggleSeleccion(alimento: string) {
     const index = this.alimentosSeleccionados.indexOf(alimento);
@@ -43,21 +43,28 @@ export class VerdurasComponent {
     } else {
       this.alimentosSeleccionados.push(alimento);
     }
-    // Enviar el arreglo actualizado al servicio
-    this.tiempoService.actualizarAlimentosSeleccionados(this.alimentosSeleccionados);
+    this.tiempoService.actualizarAlimentosSeleccionados(this.tipo_dia, this.alimentosSeleccionados);
   }
 
-  // Método para verificar si un alimento está seleccionado
   isSelected(alimento: string): boolean {
     return this.alimentosSeleccionados.includes(alimento);
   }
 
-  public siguiente() {
+  siguiente() {
+    this.tiempoService.actualizarAlimentosSeleccionados(this.tipo_dia, this.alimentosSeleccionados);
     this.router.navigate(['frutas/']);
   }
 
-  public regresar() {
+  regresar() {
     this.router.navigate(['proteinas/']);
   }
 
+  guardarAlimentos() {
+    if (this.tipo_dia) {
+      this.tiempoService.actualizarAlimentosPorComida(this.tipo_dia, this.alimentosSeleccionados);
+      console.log(`Alimentos guardados para ${this.tipo_dia}:`, this.alimentosSeleccionados);
+    } else {
+      console.warn('No se ha seleccionado un tipo de comida.');
+    }
+  }
 }

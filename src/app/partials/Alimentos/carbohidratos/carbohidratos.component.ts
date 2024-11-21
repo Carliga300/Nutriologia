@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { TiempoService } from 'src/services/tiempo.service';
 import { Router } from '@angular/router';
 
@@ -7,14 +7,14 @@ import { Router } from '@angular/router';
   templateUrl: './carbohidratos.component.html',
   styleUrls: ['./carbohidratos.component.scss']
 })
-export class CarbohidratosComponent {
+export class CarbohidratosComponent implements OnInit {
 
-  public alimentos:any[]= [
+  public alimentos: any[] = [
     { nombre: 'Arroz', src: '/assets/images/arroz.jpeg' },
     { nombre: 'Tortilla', src: '/assets/images/tortillas.jpeg' },
     { nombre: 'Pan integral', src: '/assets/images/pan.jpeg' },
     { nombre: 'Avena', src: '/assets/images/avena.jpeg' },
-    { nombre: 'Cereeal', src: '/assets/images/ceereal.jpeg' },
+    { nombre: 'Cereal', src: '/assets/images/cereal.jpeg' },
     { nombre: 'Pasta', src: '/assets/images/pasta.jpeg' },
     { nombre: 'Frijoles', src: '/assets/images/frijoles.jpeg' },
     { nombre: 'Habas', src: '/assets/images/habas.jpeg' },
@@ -29,15 +29,12 @@ export class CarbohidratosComponent {
   constructor(
     private tiempoService: TiempoService,
     private router: Router
-  ){}
+  ) {}
 
   ngOnInit(): void {
-    // Carga los alimentos seleccionados del servicio al iniciar el componente
-    this.alimentosSeleccionados = this.tiempoService.obtenerAlimentosSeleccionados();
     this.tipo_dia = this.tiempoService.getTipoDia(); // Obtiene el valor del servicio
-  this.alimentosSeleccionados = this.tiempoService.obtenerAlimentosSeleccionados();
+    this.alimentosSeleccionados = this.tiempoService.obtenerAlimentosSeleccionados(this.tipo_dia);
   }
-
 
   toggleSeleccion(alimento: string) {
     const index = this.alimentosSeleccionados.indexOf(alimento);
@@ -46,28 +43,19 @@ export class CarbohidratosComponent {
     } else {
       this.alimentosSeleccionados.push(alimento);
     }
-    // Enviar el arreglo actualizado al servicio
-    this.tiempoService.actualizarAlimentosSeleccionados(this.alimentosSeleccionados);
+    this.tiempoService.actualizarAlimentosSeleccionados(this.tipo_dia, this.alimentosSeleccionados);
   }
 
-  // Método para verificar si un alimento está seleccionado
   isSelected(alimento: string): boolean {
     return this.alimentosSeleccionados.includes(alimento);
   }
-  seleccionarAlimento(alimento: any) {
-    this.alimentosSeleccionados.push(alimento);
-    // Actualizamos el servicio con los alimentos seleccionados
-    this.tiempoService.actualizarAlimentosSeleccionados(this.alimentosSeleccionados);
+
+  siguiente() {
+    this.tiempoService.actualizarAlimentosSeleccionados(this.tipo_dia, this.alimentosSeleccionados);
+    this.router.navigate(['/dieta-tiempo']);
   }
 
-  public siguiente() {
-    // Asegúrate de que el servicio se actualice con los alimentos seleccionados antes de navegar
-    this.tiempoService.actualizarAlimentosSeleccionados(this.alimentosSeleccionados);
-    this.guardarAlimentos(); // Guarda los alimentos antes de navegar
-    this.router.navigate(['/dieta-tiempo']);  // Navega de vuelta a la pantalla de dieta
-  }
-
-  public regresar() {
+  regresar() {
     this.router.navigate(['frutas/']);
   }
 
@@ -78,6 +66,5 @@ export class CarbohidratosComponent {
     } else {
       console.warn('No se ha seleccionado un tipo de comida.');
     }
+  }
 }
-}
-//ddaasasasass

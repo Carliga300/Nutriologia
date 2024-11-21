@@ -24,7 +24,7 @@
       <div class="comidas-container">
 
         <!-- Desayuno -->
-        <div *ngIf="comidas[0]" class="comida-card" [attr.value]="'Desayuno'" (click)="navegar('Desayuno')">
+        <div *ngIf="comidas[0]" class="comida-card" [attr.value]="'Desayuno'" (click)="navegar('desayuno')">
           <h3>Desayuno</h3>
           <div *ngIf="comidas[0].alimentos.length > 0" class="alimento-list">
             <div *ngFor="let alimento of comidas[0].alimentos" class="alimento-item">
@@ -38,7 +38,7 @@
         </div>
 
         <!-- Comida -->
-        <div *ngIf="comidas[1]" class="comida-card" [attr.value]="'Comida'" (click)="navegar('Comida')">
+        <div *ngIf="comidas[1]" class="comida-card" [attr.value]="'Comida'" (click)="navegar('comida')">
           <h3>Comida</h3>
           <div *ngIf="comidas[1].alimentos.length > 0" class="alimento-list">
             <div *ngFor="let alimento of comidas[1].alimentos" class="alimento-item">
@@ -52,7 +52,7 @@
         </div>
 
         <!-- Cena -->
-        <div *ngIf="comidas[2]" class="comida-card" [attr.value]="'Cena'" (click)="navegar('Cena')">
+        <div *ngIf="comidas[2]" class="comida-card" [attr.value]="'Cena'" (click)="navegar('cena')">
           <h3>Cena</h3>
           <div *ngIf="comidas[2].alimentos.length > 0" class="alimento-list">
             <div *ngFor="let alimento of comidas[2].alimentos" class="alimento-item">

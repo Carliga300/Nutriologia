@@ -1,12 +1,10 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { ValidatorService } from './tools/validator.service';
 import { ErrorService } from './tools/error.service';
-import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { FacadeService } from './facade.service';
-import { BehaviorSubject } from 'rxjs';
-
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -16,15 +14,15 @@ const httpOptions = {
   providedIn: 'root'
 })
 export class TiempoService {
-  private comidas: any[] = [
-    {value: '1', nombre: 'Desayuno', alimentos: []},
-    {value: '2', nombre: 'Comida', alimentos: []},
-    {value: '3', nombre: 'Cena', alimentos: []},
-  ];
+  private alimentosPorComida = {
+    desayuno: [],
+    comida: [],
+    cena: []
+  };
   private tipoDiaSubject = new BehaviorSubject<string>('');
   tipoDia$ = this.tipoDiaSubject.asObservable();
-  private alimentosSeleccionados = new BehaviorSubject<any[]>([]); // Usamos BehaviorSubject para almacenar los alimentos seleccionados
-  alimentosSeleccionados$ = this.alimentosSeleccionados.asObservable();
+  private alimentosSeleccionadosSubject = new BehaviorSubject<any[]>([]);
+  alimentosSeleccionados$ = this.alimentosSeleccionadosSubject.asObservable();
 
   constructor(
     private http: HttpClient,
@@ -33,35 +31,27 @@ export class TiempoService {
     private facadeService: FacadeService
   ) { }
 
-  // Método para obtener las comidas
-  obtenerComidas(): any[] {
-    return this.comidas;
+  obtenerAlimentosSeleccionados(tipoComida: string): any[] {
+    return this.alimentosPorComida[tipoComida] || [];
   }
 
-  // Método para actualizar el arreglo
-  actualizarAlimentosSeleccionados(alimentos: any[]) {
-    this.alimentosSeleccionados.next(alimentos);
-  }
-
-  obtenerAlimentosSeleccionados(): any[] {
-    return this.alimentosSeleccionados.getValue();
-  }
-
-  // Método para actualizar los alimentos por tipo de comida
-  actualizarAlimentosPorComida(tipoComida: string, alimentos: any[]) {
-    // Buscar si ya existe el tipo de comida en la lista
-    const comida = this.comidas.find(c => c.comida === tipoComida);
-
-    if (comida) {
-      // Si ya existe, actualizamos los alimentos
-      comida.alimentos = alimentos;
+  actualizarAlimentosSeleccionados(tipoComida: string, alimentos: any[]): void {
+    console.log(tipoComida,alimentos)
+    if (this.alimentosPorComida[tipoComida]) {
+      this.alimentosPorComida[tipoComida] = alimentos;
+      this.alimentosSeleccionadosSubject.next(alimentos);
     } else {
-      // Si no existe, agregamos una nueva entrada
-      this.comidas.push({ comida: tipoComida, alimentos: alimentos });
+      console.error('Tipo de comida no reconocido:', tipoComida);
     }
+  }
 
-    // Para ver las comidas actualizadas en la consola
-    console.log(`Comidas actualizadas:`, this.comidas);
+  actualizarAlimentosPorComida(tipoComida: string, alimentos: any[]): void {
+    if (this.alimentosPorComida[tipoComida]) {
+      this.alimentosPorComida[tipoComida] = alimentos;
+      console.log(`Alimentos para ${tipoComida} actualizados:`, alimentos);
+    } else {
+      console.error('Tipo de comida no reconocido:', tipoComida);
+    }
   }
 
   setTipoDia(tipo: string) {
@@ -72,6 +62,10 @@ export class TiempoService {
     return this.tipoDiaSubject.getValue();
   }
 
+  obtenerComidas(): any[] {
+    return Object.keys(this.alimentosPorComida).map(key => ({
+      nombre: key,
+      alimentos: this.alimentosPorComida[key]
+    }));
+  }
 }
-
-//aaaaaasaas
