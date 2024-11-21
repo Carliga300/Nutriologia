@@ -1,30 +1,28 @@
 <app-navbar [tipo]="tipo"></app-navbar>
 <div class="wrapper">
   <div class="section-registro">
-
     <div class="form-group col-12">
       <label class="title-user">Dieta por tiempos</label>
     </div>
 
     <div class="row mt-3">
       <div class="form-group col-12 d-flex justify-content-center mat1">
-        <mat-radio-group (change)="radioChange($event)" [disabled]="editar">
-          <mat-radio-button value="Lunes">Lunes</mat-radio-button>
-          <mat-radio-button value="Martes">Martes</mat-radio-button>
-          <mat-radio-button value="Miercoles">Miércoles</mat-radio-button>
-          <mat-radio-button value="Jueves">Jueves</mat-radio-button>
-          <mat-radio-button value="Viernes">Viernes</mat-radio-button>
-          <mat-radio-button value="Sabado">Sábado</mat-radio-button>
-          <mat-radio-button value="Domingo">Domingo</mat-radio-button>
+        <mat-radio-group (change)="onDayChange($event)" [disabled]="editar">
+          <mat-radio-button value="1">Lunes</mat-radio-button>
+          <mat-radio-button value="2">Martes</mat-radio-button>
+          <mat-radio-button value="3">Miércoles</mat-radio-button>
+          <mat-radio-button value="4">Jueves</mat-radio-button>
+          <mat-radio-button value="5">Viernes</mat-radio-button>
+          <mat-radio-button value="6">Sábado</mat-radio-button>
+          <mat-radio-button value="7">Domingo</mat-radio-button>
         </mat-radio-group>
       </div>
     </div>
 
     <div class="row mt-3">
       <div class="comidas-container">
-
         <!-- Desayuno -->
-        <div *ngIf="comidas[0]" class="comida-card" [attr.value]="'Desayuno'" (click)="navegar('desayuno')">
+        <div *ngIf="comidas[0]" class="comida-card" (click)="seleccionarComida('desayuno')">
           <h3>Desayuno</h3>
           <div *ngIf="comidas[0].alimentos.length > 0" class="alimento-list">
             <div *ngFor="let alimento of comidas[0].alimentos" class="alimento-item">
@@ -38,7 +36,7 @@
         </div>
 
         <!-- Comida -->
-        <div *ngIf="comidas[1]" class="comida-card" [attr.value]="'Comida'" (click)="navegar('comida')">
+        <div *ngIf="comidas[1]" class="comida-card" (click)="seleccionarComida('comida')">
           <h3>Comida</h3>
           <div *ngIf="comidas[1].alimentos.length > 0" class="alimento-list">
             <div *ngFor="let alimento of comidas[1].alimentos" class="alimento-item">
@@ -52,7 +50,7 @@
         </div>
 
         <!-- Cena -->
-        <div *ngIf="comidas[2]" class="comida-card" [attr.value]="'Cena'" (click)="navegar('cena')">
+        <div *ngIf="comidas[2]" class="comida-card" (click)="seleccionarComida('cena')">
           <h3>Cena</h3>
           <div *ngIf="comidas[2].alimentos.length > 0" class="alimento-list">
             <div *ngFor="let alimento of comidas[2].alimentos" class="alimento-item">
@@ -64,10 +62,7 @@
             <span>No se han seleccionado alimentos.</span>
           </div>
         </div>
-
       </div>
     </div>
-
   </div>
 </div>
-

@@ -61,7 +61,7 @@ export class FrutasComponent implements OnInit {
 
   guardarAlimentos() {
     if (this.tipo_dia) {
-      this.tiempoService.actualizarAlimentosPorComida(this.tipo_dia, this.alimentosSeleccionados);
+      this.tiempoService.actualizarAlimentosSeleccionados(this.tipo_dia, this.alimentosSeleccionados);
       console.log(`Alimentos guardados para ${this.tipo_dia}:`, this.alimentosSeleccionados);
     } else {
       console.warn('No se ha seleccionado un tipo de comida.');

@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { ValidatorService } from './tools/validator.service';
 import { ErrorService } from './tools/error.service';
 import { environment } from 'src/environments/environment';
@@ -14,13 +14,20 @@ const httpOptions = {
   providedIn: 'root'
 })
 export class TiempoService {
-  private alimentosPorComida = {
-    desayuno: [],
-    comida: [],
-    cena: []
+  private alimentosPorDia = {
+    lunes: { desayuno: [], comida: [], cena: [] },
+    martes: { desayuno: [], comida: [], cena: [] },
+    miércoles: { desayuno: [], comida: [], cena: [] },
+    jueves: { desayuno: [], comida: [], cena: [] },
+    viernes: { desayuno: [], comida: [], cena: [] },
+    sábado: { desayuno: [], comida: [], cena: [] },
+    domingo: { desayuno: [], comida: [], cena: [] }
   };
+
   private tipoDiaSubject = new BehaviorSubject<string>('');
   tipoDia$ = this.tipoDiaSubject.asObservable();
+  private tipoTiempoSubject = new BehaviorSubject<string>(''); // Añadido para tipo de comida
+  tipoTiempo$ = this.tipoTiempoSubject.asObservable();
   private alimentosSeleccionadosSubject = new BehaviorSubject<any[]>([]);
   alimentosSeleccionados$ = this.alimentosSeleccionadosSubject.asObservable();
 
@@ -29,43 +36,59 @@ export class TiempoService {
     private validatorService: ValidatorService,
     private errorService: ErrorService,
     private facadeService: FacadeService
-  ) { }
+  ) {}
 
   obtenerAlimentosSeleccionados(tipoComida: string): any[] {
-    return this.alimentosPorComida[tipoComida] || [];
+    const dia = this.getTipoDia();
+    console.log(`Obteniendo alimentos para ${dia} - ${tipoComida}`);
+    const alimentos = this.obtenerAlimentosPorDia(dia, tipoComida);
+    console.log(`Alimentos obtenidos:`, alimentos);
+    return alimentos;
   }
-
+  
   actualizarAlimentosSeleccionados(tipoComida: string, alimentos: any[]): void {
-    console.log(tipoComida,alimentos)
-    if (this.alimentosPorComida[tipoComida]) {
-      this.alimentosPorComida[tipoComida] = alimentos;
+    const dia = this.getTipoDia();
+    console.log(`Actualizando alimentos para ${dia} - ${tipoComida}:`, alimentos);
+    this.actualizarAlimentosPorDia(dia, tipoComida, alimentos);
+    this.alimentosSeleccionadosSubject.next(alimentos);
+  }
+  
+  obtenerComidas(): any[] {
+    return Object.keys(this.alimentosPorDia.lunes).map(key => ({
+      nombre: key,
+      alimentos: []
+    }));
+  }
+
+  actualizarAlimentosPorDia(dia: string, tipoComida: string, alimentos: any[]): void {
+    if (this.alimentosPorDia[dia] && this.alimentosPorDia[dia][tipoComida]) {
+      this.alimentosPorDia[dia][tipoComida] = alimentos;
       this.alimentosSeleccionadosSubject.next(alimentos);
+      console.log(`Alimentos para ${dia} ${tipoComida} actualizados:`, alimentos);
     } else {
-      console.error('Tipo de comida no reconocido:', tipoComida);
+      console.error('Día o tipo de comida no reconocido:', dia, tipoComida);
     }
   }
-
-  actualizarAlimentosPorComida(tipoComida: string, alimentos: any[]): void {
-    if (this.alimentosPorComida[tipoComida]) {
-      this.alimentosPorComida[tipoComida] = alimentos;
-      console.log(`Alimentos para ${tipoComida} actualizados:`, alimentos);
-    } else {
-      console.error('Tipo de comida no reconocido:', tipoComida);
-    }
+  
+  obtenerAlimentosPorDia(dia: string, tipoComida: string): any[] {
+    console.log(`Obteniendo alimentos para ${dia} - ${tipoComida}`);
+    console.log('Estructura actual de alimentosPorDia:', this.alimentosPorDia);
+    return this.alimentosPorDia[dia] ? this.alimentosPorDia[dia][tipoComida] : [];
   }
 
-  setTipoTiempo(tipo: string) {
-    this.tipoDiaSubject.next(tipo);
+  setTipoDia(dia: string) {
+    this.tipoDiaSubject.next(dia);
   }
 
-  getTipoTiempo(): string {
+  getTipoDia(): string {
     return this.tipoDiaSubject.getValue();
   }
 
-  obtenerComidas(): any[] {
-    return Object.keys(this.alimentosPorComida).map(key => ({
-      nombre: key,
-      alimentos: this.alimentosPorComida[key]
-    }));
+  setTipoTiempo(tipo: string) {
+    this.tipoTiempoSubject.next(tipo);
+  }
+
+  getTipoTiempo(): string {
+    return this.tipoTiempoSubject.getValue();
   }
 }

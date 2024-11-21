@@ -19,12 +19,13 @@ export class ProteinasComponent implements OnInit {
     { nombre: 'Res', src: '/assets/images/res.jpeg' },
     { nombre: 'Almendras', src: '/assets/images/almendras.jpg' },
     { nombre: 'Cacahuate', src: '/assets/images/cacahuate.jpg' },
-    { nombre: 'Atun', src: '/assets/images/atun.jpg' },
+    { nombre: 'Atún', src: '/assets/images/atun.jpg' },
     { nombre: 'Leche', src: '/assets/images/leches.jpeg' },
     { nombre: 'Queso', src: '/assets/images/queso.jpg' },
   ];
   alimentosSeleccionados: any[] = [];
   public tipo_dia: string = '';
+  public tipo_comida: string = '';
 
   constructor(
     private tiempoService: TiempoService,
@@ -32,8 +33,9 @@ export class ProteinasComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.tipo_dia = this.tiempoService.getTipoTiempo(); // Obtiene el valor del servicio
-    this.alimentosSeleccionados = this.tiempoService.obtenerAlimentosSeleccionados(this.tipo_dia);
+    this.tipo_dia = this.tiempoService.getTipoDia(); // Obtiene el día seleccionado
+    this.tipo_comida = this.tiempoService.getTipoTiempo(); // Obtiene el tipo de comida seleccionado
+    this.alimentosSeleccionados = this.tiempoService.obtenerAlimentosSeleccionados(this.tipo_comida);
   }
 
   toggleSeleccion(alimento: string) {
@@ -43,7 +45,7 @@ export class ProteinasComponent implements OnInit {
     } else {
       this.alimentosSeleccionados.push(alimento);
     }
-    this.tiempoService.actualizarAlimentosSeleccionados(this.tipo_dia, this.alimentosSeleccionados);
+    this.tiempoService.actualizarAlimentosSeleccionados(this.tipo_comida, this.alimentosSeleccionados);
   }
 
   isSelected(alimento: string): boolean {
@@ -51,7 +53,7 @@ export class ProteinasComponent implements OnInit {
   }
 
   siguiente() {
-    this.tiempoService.actualizarAlimentosSeleccionados(this.tipo_dia, this.alimentosSeleccionados);
+    this.tiempoService.actualizarAlimentosSeleccionados(this.tipo_comida, this.alimentosSeleccionados);
     this.router.navigate(['verduras/']);
   }
 
@@ -61,8 +63,8 @@ export class ProteinasComponent implements OnInit {
 
   guardarAlimentos() {
     if (this.tipo_dia) {
-      this.tiempoService.actualizarAlimentosPorComida(this.tipo_dia, this.alimentosSeleccionados);
-      console.log(`Alimentos guardados para ${this.tipo_dia}:`, this.alimentosSeleccionados);
+      this.tiempoService.actualizarAlimentosSeleccionados(this.tipo_comida, this.alimentosSeleccionados);
+      console.log(`Alimentos guardados para ${this.tipo_dia} - ${this.tipo_comida}:`, this.alimentosSeleccionados);
     } else {
       console.warn('No se ha seleccionado un tipo de comida.');
     }

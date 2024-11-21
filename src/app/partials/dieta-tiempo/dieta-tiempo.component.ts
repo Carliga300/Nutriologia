@@ -15,24 +15,24 @@ export class DietaTiempoComponent implements OnInit {
   @Input() rol: string = "";
   @Input() datos_user: any = {};
 
-  public tipo:string = "dieta-tiempo";
-  public tipo_dia:string = "";
-  public tiempo:string = "";
+  public tipo: string = "dieta-tiempo";
+  public tipo_dia: string = "";
+  public tipo_comida: string = "";
   public token: string = "";
-  public errors:any={};
-  public editar:boolean = false;
+  public errors: any = {};
+  public editar: boolean = false;
   public idUser: Number = 0;
   public alimentosSeleccionados: any[] = [];
   public comidas: any[] = [];
 
-  public dias:any[]= [
-    {value: '1', nombre: 'Lunes', comidas: this.comidas},
-    {value: '2', nombre: 'Martes', comidas: this.comidas},
-    {value: '3', nombre: 'Miércoles', comidas: this.comidas},
-    {value: '4', nombre: 'Jueves', comidas: this.comidas},
-    {value: '5', nombre: 'Viernes', comidas: this.comidas},
-    {value: '6', nombre: 'Sábado', comidas: this.comidas},
-    {value: '7', nombre: 'Domingo', comidas: this.comidas},
+  public dias: any[] = [
+    { value: '1', nombre: 'Lunes' },
+    { value: '2', nombre: 'Martes' },
+    { value: '3', nombre: 'Miércoles' },
+    { value: '4', nombre: 'Jueves' },
+    { value: '5', nombre: 'Viernes' },
+    { value: '6', nombre: 'Sábado' },
+    { value: '7', nombre: 'Domingo' },
   ];
 
   constructor(
@@ -41,49 +41,83 @@ export class DietaTiempoComponent implements OnInit {
     public activatedRoute: ActivatedRoute,
     private tiempoService: TiempoService,
     public dialog: MatDialog
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.comidas = this.tiempoService.obtenerComidas();
-
+    
     this.tiempoService.alimentosSeleccionados$.subscribe(alimentos => {
       console.log('Alimentos seleccionados:', alimentos);
-
-      if (this.tiempo) {
-        const comida = this.comidas.find(c => c.nombre === this.tiempo);
-        if (comida) {
-          comida.alimentos = [...alimentos];
-        }
+  
+      if (this.tipo_dia && this.tipo_comida) {
+        const dia = this.getSelectedDay();
+        this.comidas.forEach(comida => {
+          comida.alimentos = this.tiempoService.obtenerAlimentosPorDia(dia, this.tipo_comida);
+        });
       }
       console.log('Comidas seleccionadas:', this.comidas);
-      console.log('Tiempo:', this.tiempo);
     });
+    
+    if (this.tipo_dia) {
+      const dia = this.getSelectedDay();
+      this.updateComidas(dia);
+      console.log(`Alimentos seleccionados para ${dia}:`, this.comidas);
+    }
+  }
+
+  private getSelectedDay(): string {
+    return this.dias.find(d => d.value === this.tipo_dia)?.nombre.toLowerCase() || '';
+  }
+
+  updateComidas(dia: string): void {
+    if (dia) {
+      this.comidas.forEach(comida => {
+        comida.alimentos = this.tiempoService.obtenerAlimentosPorDia(dia, comida.nombre);
+      });
+    }
   }
 
   regresar() {
     this.location.back();
   }
 
-  agregarAlimento(comidaNombre: string, alimento: any) {
-    const comida = this.comidas.find(c => c.nombre === comidaNombre);
-    if (comida && !comida.alimentos.includes(alimento)) {
-      comida.alimentos.push(alimento);
-      console.log(`${alimento.nombre} agregado a ${comidaNombre}`);
+  agregarAlimento(dia: string, comidaNombre: string, alimento: any) {
+    const alimentos = this.tiempoService.obtenerAlimentosPorDia(dia, comidaNombre);
+    if (alimentos && !alimentos.includes(alimento)) {
+      alimentos.push(alimento);
+      this.tiempoService.actualizarAlimentosPorDia(dia, comidaNombre, alimentos);
+      console.log(`${alimento.nombre} agregado a ${comidaNombre} en ${dia}`);
     }
   }
 
   radioChange(event: MatRadioChange) {
     this.tipo_dia = event.value;
+    const dia = this.getSelectedDay();
+    this.updateComidas(dia);
   }
 
-  navegar(tipo: string) {
-    this.tiempo = tipo;
-    console.log(`Navegando a seleccionar alimentos para ${tipo}`);
-    this.tiempoService.setTipoTiempo(tipo);
+  onDayChange(event: MatRadioChange) {
+    this.tipo_dia = event.value;
+    const dia = this.getSelectedDay();
+    this.updateComidas(dia);
+  }
+
+  seleccionarComida(tipoComida: string) {
+    if (!this.tipo_dia) {
+      alert('Por favor, selecciona un día antes de continuar.');
+      return;
+    }
+
+    this.tipo_comida = tipoComida;
+    const dia = this.getSelectedDay();
+    console.log(`Seleccionando ${tipoComida} para ${dia}`);
+    this.tiempoService.setTipoDia(dia);
+    this.tiempoService.setTipoTiempo(tipoComida);
     this.router.navigate(['/proteinas']);
   }
 
   guardarAlimentos(comida: string, alimentos: any[]) {
-    this.tiempoService.actualizarAlimentosPorComida(comida, alimentos);
+    const dia = this.getSelectedDay();
+    this.tiempoService.actualizarAlimentosPorDia(dia, comida, alimentos);
   }
 }
