@@ -17,7 +17,7 @@ export class DietaTiempoComponent implements OnInit {
 
   public tipo:string = "dieta-tiempo";
   public tipo_dia:string = "";
-  public tiempo:any= {};
+  public tiempo:string = "";
   public token: string = "";
   public errors:any={};
   public editar:boolean = false;
@@ -49,14 +49,14 @@ export class DietaTiempoComponent implements OnInit {
     this.tiempoService.alimentosSeleccionados$.subscribe(alimentos => {
       console.log('Alimentos seleccionados:', alimentos);
 
-      if (this.tipo_dia) {
-        const comida = this.comidas.find(c => c.nombre === this.tipo_dia);
+      if (this.tiempo) {
+        const comida = this.comidas.find(c => c.nombre === this.tiempo);
         if (comida) {
           comida.alimentos = [...alimentos];
         }
       }
       console.log('Comidas seleccionadas:', this.comidas);
-      console.log('Tiempo:', this.tipo_dia);
+      console.log('Tiempo:', this.tiempo);
     });
   }
 
@@ -77,9 +77,9 @@ export class DietaTiempoComponent implements OnInit {
   }
 
   navegar(tipo: string) {
-    this.tipo_dia = tipo;
+    this.tiempo = tipo;
     console.log(`Navegando a seleccionar alimentos para ${tipo}`);
-    this.tiempoService.setTipoDia(tipo);
+    this.tiempoService.setTipoTiempo(tipo);
     this.router.navigate(['/proteinas']);
   }
 

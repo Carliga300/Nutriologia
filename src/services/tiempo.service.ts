@@ -54,11 +54,11 @@ export class TiempoService {
     }
   }
 
-  setTipoDia(tipo: string) {
+  setTipoTiempo(tipo: string) {
     this.tipoDiaSubject.next(tipo);
   }
 
-  getTipoDia(): string {
+  getTipoTiempo(): string {
     return this.tipoDiaSubject.getValue();
   }
 

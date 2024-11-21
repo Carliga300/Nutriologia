@@ -32,7 +32,7 @@ export class CarbohidratosComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.tipo_dia = this.tiempoService.getTipoDia(); // Obtiene el valor del servicio
+    this.tipo_dia = this.tiempoService.getTipoTiempo(); // Obtiene el valor del servicio
     this.alimentosSeleccionados = this.tiempoService.obtenerAlimentosSeleccionados(this.tipo_dia);
   }
 
